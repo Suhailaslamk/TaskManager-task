@@ -6,8 +6,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 
 builder.Services.AddAuthentication(options =>
@@ -30,6 +28,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -45,9 +52,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+
+
+
+
+
+
